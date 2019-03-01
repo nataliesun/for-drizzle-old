@@ -1,12 +1,36 @@
+function deletePolygons(polygons) {
+  //owner: Julie
+  
+  polygons.forEach(poly => {
+    let deleteReq = `http://api.agromonitoring.com/agro/1.0/polygons/${poly}?appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
+    let options = {method: 'DELETE'};
+    fetch(deleteReq, options)});
+}
+
 function cleanup() {
   //owner: Julie
   //cleans up polygons and resets form
+  
+  // api endpoint for getting all of a user's polygons
+  let allPolygonsReq = `http://api.agromonitoring.com/agro/1.0/polygons?appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
+  
+  //fetch all polygons -- get list of polygons out of response and pass it to delete function
+  
+    fetch(allPolygonsReq)
+        .then(response => response.json())
+        .then(responseJson => {
+            let allPolygons = responseJson.map(poly => poly.id);
+            deletePolygons(allPolygons);
+        });
+
 }
 
 function getRainForecast() {
   //owner: Julie
   //use zip code/coordinates
   //api url: https://openweathermap.org/api
+
+  
 }
 
 function getMoisture() {
