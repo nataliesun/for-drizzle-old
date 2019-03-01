@@ -21,25 +21,39 @@ function getPolygon() {
   //makes polygon from coordinates
 }
 
+function makePolygon(lat, long) {
+  //first and last the same
+  const polygon = [];
+  const point1 = [lat, long];
+  const point2 = [lat, long];
+  const point3 = [lat, long];
+  const point4 = [lat, long];
+  const point5 = [lat, long];
 
-function getCoordinates() {
+}
+
+function getCoordinates(response) {
   //owner: Natalie
   //make fetch call to getcoordinates passing in formatAddress
   //api url: http://geoservices.tamu.edu
+
+  const lat = response.OutputGeocodes[0].OutputGeocode.Latitude;
+  const long = response.OutputGeocodes[0].OutputGeocode.Longitude;
+  console.log(lat, long);
+  return makePolygon(lat, long);
 }
 
 
-function formatAddress() {
-  //owner: Natalie
-  //gets address and turns into string that getCoordinates fxn needs it to be in
-  //street+city+state+zip
-}
-
-
-function displayResults() {
+function displayResults(ad, ci, st, z) {
   //fetch with chained callbacks
+  const address = encodeURIComponent(ad);
+  const city = encodeURIComponent(ci);
+  const state = encodeURIComponent(st);
+  const zip = encodeURIComponent(z);
+  fetch (`https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?apiKey=ad7ae12b6267452bb43785a9d63ff348&version=4.01&streetAddress=${address}&city=${city}&zip=${zip}&format=json`)
+  .then(response => response.json())
+  .then(responseJ => getCoordinates(responseJ)) //coordinates
 
-  //1. call to formatAddress
   //2. make call to getCoordinates
   //3. getPolygon with coordinates
   //4. getMoisture with polygon
