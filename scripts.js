@@ -45,11 +45,19 @@ function displayResults() {
   //4. getMoisture with polygon
   //5. getRainForecast from address
   //6. cleanup to reset form and clean up polygons
+  //7. catch error for bad addresses
 }
 
 
 function watchForm() {
-
+    $('#js-form').on('submit', function(event){
+      event.preventDefault();
+      const address = $('#address').val().trim();
+      const city = $('#city').val().trim();
+      const state = $('#state').val().trim();
+      const zip = $('#zip').val().trim();
+      displayResults(address, city, state, zip);
+    })
 
 }
 
