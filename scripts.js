@@ -10,8 +10,13 @@ function getRainForecast() {
 }
 
 function getMoisture() {
+  const polyid = "5c7acfe257121a000ec4e968";
+  // console.log(polyid);
+  const url = `http://api.agromonitoring.com/agro/1.0/soil?polyid=${polyid}&appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
+  // console.log(url);
 
-  
+  fetch(url).then(response => response.json()).then(responseJson => console.log(responseJson.moisture))
+
   //owner: Mengqi
   //gets the moisture from polygon
   //api url: https://agromonitoring.com/api
@@ -54,7 +59,7 @@ function getPolygon(coordinates) {
     body: JSON.stringify(body)
   }
 
-  fetch(url, options).then(response => response.json()).then(responseJson => responseJson.id)
+  fetch(url, options).then(response => response.json()).then(responseJson => console.log(responseJson.id))
 
   //owner: Mengqi
   //makes polygon from coordinates
@@ -105,7 +110,7 @@ function main() {
   console.log('App running');
   watchForm();
   getPolygon();
-
+  getMoisture();
 }
 
 
