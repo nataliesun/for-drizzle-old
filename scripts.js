@@ -33,13 +33,14 @@ function getRainForecast() {
 
 }
 
-function getMoisture() {
-  const polyid = "5c7acfe257121a000ec4e968";
+function getMoisture(id) {
   // console.log(polyid);
-  const url = `http://api.agromonitoring.com/agro/1.0/soil?polyid=${polyid}&appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
+  const url = `http://api.agromonitoring.com/agro/1.0/soil?polyid=${id}&appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
   // console.log(url);
 
-  fetch(url).then(response => response.json()).then(responseJson => console.log(responseJson.moisture))
+  return fetch(url)
+  .then(response => response.json())
+  .then(responseJson => responseJson.moisture)
 
   //owner: Mengqi
   //gets the moisture from polygon
@@ -52,7 +53,7 @@ function getPolygon(coordinates) {
   // const coordinates = [
   //   [-121.1958,37.6683], [-121.1779,37.6687], [-121.1773,37.6792], [-121.1958,37.6792], [-121.1958,37.6683]
   // ];
-
+  console.log('getP', coordinates);
   const body = {
     "name":"Polygon Sample",
     "geo_json":{
@@ -78,52 +79,55 @@ function getPolygon(coordinates) {
   }
 
 
-  return fetch(url, options).then(response => response.json()).then(responseJson => responseJson.id)
-
-
+  return fetch(url, options)
+  .then(response => response.json())
+  .then(responseJson => responseJson.id)
 
   //owner: Mengqi
   //makes polygon from coordinates
 }
 
-function makePolygon(long, lat) {
+function makePolygon(array) {
   //first and last the same
-  const point1 = [long, lat];
-  const point2 = [long+0.00957, lat-0.000137];
-  const point3 = [long+0.0139, lat-0.005551];
-  const point4 = [long+0.00015, lat-0.005679];
-  const point5 = [long, lat];
+  const point1 = [array[0], array[1]];
+  const point2 = [array[0]+0.00957, array[1]-0.000137];
+  const point3 = [array[0]+0.0139, array[1]-0.005551];
+  const point4 = [array[0]+0.00015, array[1]-0.005679];
+  const point5 = [array[0], array[1]];
   return [point1, point2, point3, point4, point5];
 
 }
 
-function getCoordinates(response) {
+function getCoordinates(ad, ci, st, z) {
   //owner: Natalie
   //make fetch call to getcoordinates passing in formatAddress
   //api url: http://geoservices.tamu.edu
-
-  const lat = response.OutputGeocodes[0].OutputGeocode.Latitude;
-  const long = response.OutputGeocodes[0].OutputGeocode.Longitude;
-  //console.log(lat, long);
-  console.log(makePolygon(parseFloat(long),parseFloat(lat)));
-}
-
-function getAddress(ad, ci, st, z) {
   const address = encodeURIComponent(ad);
   const city = encodeURIComponent(ci);
   const state = encodeURIComponent(st);
   const zip = encodeURIComponent(z);
 
   return fetch (`https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?apiKey=ad7ae12b6267452bb43785a9d63ff348&version=4.01&streetAddress=${address}&city=${city}&zip=${zip}&format=json`)
+  .then(response => response.json())
+  .then(responseJ => {
+      const lat = parseFloat(responseJ.OutputGeocodes[0].OutputGeocode.Latitude);
+      const long = parseFloat(responseJ.OutputGeocodes[0].OutputGeocode.Longitude);
+      return [long, lat];
+    }
+  );
 }
 
 
 function displayResults(ad, ci, st, z) {
   //fetch with chained callbacks
 
-  getAddress(ad, ci, st, z)
-  .then(response => response.json())
-  .then(responseJ => getCoordinates(responseJ)) //coordinates
+  getCoordinates(ad, ci, st, z)
+  .then(coordinates => makePolygon(coordinates))
+  .then(polygon => getPolygon(polygon))
+  .then(id => getMoisture(id))
+  .then(moist => console.log(moist))
+   //coordinates
+
 
   //2. make call to getCoordinates
   //3. getPolygon with coordinates
