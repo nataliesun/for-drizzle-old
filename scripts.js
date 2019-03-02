@@ -21,15 +21,14 @@ function getPolygon() {
   //makes polygon from coordinates
 }
 
-function makePolygon(lat, long) {
+function makePolygon(long, lat) {
   //first and last the same
-  const polygon = [];
-  const point1 = [lat, long];
-  const point2 = [lat, long];
-  const point3 = [lat, long];
-  const point4 = [lat, long];
-  const point5 = [lat, long];
-
+  const point1 = [long, lat];
+  const point2 = [long+0.00957, lat-0.000137];
+  const point3 = [long+0.0139, lat-0.005551];
+  const point4 = [long+0.00015, lat-0.005679];
+  const point5 = [long, lat];
+  return [point1, point2, point3, point4, point5];
 }
 
 function getCoordinates(response) {
@@ -39,8 +38,8 @@ function getCoordinates(response) {
 
   const lat = response.OutputGeocodes[0].OutputGeocode.Latitude;
   const long = response.OutputGeocodes[0].OutputGeocode.Longitude;
-  console.log(lat, long);
-  return makePolygon(lat, long);
+  //console.log(lat, long);
+  console.log(makePolygon(parseFloat(long),parseFloat(lat)));
 }
 
 
