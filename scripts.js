@@ -19,6 +19,7 @@ function cleanup() {
     fetch(allPolygonsReq)
         .then(response => response.json())
         .then(responseJson => {
+          console.log(responseJson);
             let allPolygons = responseJson.map(poly => poly.id);
             deletePolygons(allPolygons);
         });
@@ -136,6 +137,29 @@ function getCoordinates(ad, ci, st, z) {
   );
 }
 
+
+function showRainForecast(rainProbable){
+  let rain = rainProbable ? "will" : "won't";
+   
+}
+
+function showMoistureContent(moist) {
+  let moistureContent = moist*100;
+  
+}
+
+function finalDisplay(rainProbable, moistureContent) {
+  let water = //something : 'should' ? 'shouldn't';
+  $('#results').append(
+    `<p>It probably ${rain} rain</p>`
+    `<p>Moisure content is ${moistureContent}</p>`
+    `<p>So you ${water} water</p>`
+    )
+
+
+}
+
+
 function displayResults(ad, ci, st, z) {
   //fetch with chained callbacks 
  
@@ -143,21 +167,11 @@ function displayResults(ad, ci, st, z) {
   .then(coordinates => makePolygon(coordinates))
   .then(polygon => getPolygon(polygon))
   .then(id => getMoisture(id))
-  .then(moist => {
-    let moistureContent = moist*100;
-    $('#results').append(
-      `<p>Moisure content is ${moistureContent}</p>`
-    )
-  });
+  .then(moist => showMoistureContent(moist));
 
   getCoordinates(ad, ci, st, z)
   .then(coordinates => getRainForecast(coordinates))
-  .then(rainProbable => {
-    let rain = rainProbable ? "will" : "won't";
-    $('#results').append(
-      `<p>It probably ${rain} rain</p>`
-      ) 
-  });
+  .then(rainProbable => showRainForecast(rainProbable));
 
   
    //coordinates
@@ -180,6 +194,7 @@ function watchForm() {
       const state = $('#state').val().trim();
       const zip = $('#zip').val().trim();
       displayResults(address, city, state, zip);
+      cleanup();
     })
 
 }
