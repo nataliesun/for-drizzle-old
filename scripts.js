@@ -25,18 +25,14 @@ function cleanup() {
 
 }
 
+function getRainForecast(array) {
+  let locationKeyReq = `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${array[1]},${array[0]}`;
 
-function getRainForecast(lat, long) {
-  
+  fetch(locationKeyReq).then(response => response.json())
+    .then(responseJson => {
+      let key = responseJson.Key;
 
-  // hard coding for now to reduce number of test calls
-  // let locationKeyReq = `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${lat},${long}`;
-
-  // fetch(locationKeyReq).then(response => response.json())
-  //   .then(responseJson => {
-      // let key = responseJson.Key;
-
-      let key = 2243127;
+      // let key = 2243127;
       let forecastReq = `http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
       fetch(forecastReq).then(response => response.json()).then(responseJson => {
         let rainProbable = false;
@@ -49,11 +45,10 @@ function getRainForecast(lat, long) {
           return rainProbable;
       })
     })
-  // })
+  })
 }
 
-getRainForecast('30.372579','-89.451542');
-
+// getRainForecast('30.372579','-89.451542');
 
 
 function getMoisture(id) {
@@ -141,15 +136,30 @@ function getCoordinates(ad, ci, st, z) {
   );
 }
 
-
 function displayResults(ad, ci, st, z) {
-  //fetch with chained callbacks
-
+  //fetch with chained callbacks 
+ 
   getCoordinates(ad, ci, st, z)
   .then(coordinates => makePolygon(coordinates))
   .then(polygon => getPolygon(polygon))
   .then(id => getMoisture(id))
-  .then(moist => console.log(moist))
+  .then(moist => {
+    let moistureContent = moist*100;
+    $('#results').append(
+      `<p>Moisure content is ${moistureContent}</p>`
+    )
+  });
+
+  getCoordinates(ad, ci, st, z)
+  .then(coordinates => getRainForecast(coordinates))
+  .then(rainProbable => {
+    let rain = rainProbable ? "will" : "won't";
+    $('#results').append(
+      `<p>It probably ${rain} rain</p>`
+      ) 
+  });
+
+  
    //coordinates
 
 
