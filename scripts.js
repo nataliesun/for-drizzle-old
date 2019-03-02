@@ -25,13 +25,36 @@ function cleanup() {
 
 }
 
-function getRainForecast() {
-  //owner: Julie
-  //use zip code/coordinates
-  //api url: https://openweathermap.org/api
 
+function getRainForecast(lat, long) {
+  
 
+  // hard coding for now to reduce number of test calls
+  // let locationKeyReq = `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${lat},${long}`;
+
+  // fetch(locationKeyReq).then(response => response.json())
+  //   .then(responseJson => {
+      // let key = responseJson.Key;
+
+      let key = 2243127;
+      let forecastReq = `http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
+      fetch(forecastReq).then(response => response.json()).then(responseJson => {
+        let rainProbable = false;
+        responseJson.forEach(item => {
+          console.log(item.RainProbability);
+          if (item.RainProbability > 50) {
+            rainProbable = true;
+          }
+          console.log(rainProbable);
+          return rainProbable;
+      })
+    })
+  // })
 }
+
+getRainForecast('30.372579','-89.451542');
+
+
 
 function getMoisture(id) {
   // console.log(polyid);
@@ -41,6 +64,7 @@ function getMoisture(id) {
   return fetch(url)
   .then(response => response.json())
   .then(responseJson => responseJson.moisture)
+
 
   //owner: Mengqi
   //gets the moisture from polygon
