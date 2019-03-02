@@ -10,13 +10,52 @@ function getRainForecast() {
 }
 
 function getMoisture() {
+
+  
   //owner: Mengqi
   //gets the moisture from polygon
   //api url: https://agromonitoring.com/api
 }
 
 
-function getPolygon() {
+function getPolygon(coordinates) {
+  const url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid=859dbb08fa72a87e13b7ac7d68ef66ed';
+  // const coordinates = [
+  //   [-121.1958,37.6683], [-121.1779,37.6687], [-121.1773,37.6792], [-121.1958,37.6792], [-121.1958,37.6683]
+  // ];
+
+  const body = {
+    "name":"Polygon Sample",
+    "geo_json":{
+       "type":"Feature",
+       "properties":{
+ 
+       },
+       "geometry":{
+          "type":"Polygon",
+          "coordinates":[
+             [
+                [-121.1958,37.6683],
+                [-121.1779,37.6687],
+                [-121.1773,37.6792],
+                [-121.1958,37.6792],
+                [-121.1958,37.6683]
+             ]
+          ]
+       }
+    }
+ }
+
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json"
+    },
+    body: JSON.stringify(body)
+  }
+
+  fetch(url, options).then(response => response.json()).then(responseJson => responseJson.id)
+
   //owner: Mengqi
   //makes polygon from coordinates
 }
@@ -65,6 +104,7 @@ function watchForm() {
 function main() {
   console.log('App running');
   watchForm();
+  getPolygon();
 
 }
 
