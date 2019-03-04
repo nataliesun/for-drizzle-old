@@ -137,32 +137,49 @@ function getCoordinates(ad, ci, st, z) {
   );
 }
 
+const STORE = {
+  rain: false,
+  moistureContent: 0
+}
 
 function showRainForecast(rainProbable){
   let rain = rainProbable ? "will" : "won't";
-   
+  $('#results').append(`<p>It probably ${rain} rain</p>`);
+  STORE.rain = rainProbable;
+  updateStore(rain);
 }
 
 function showMoistureContent(moist) {
   let moistureContent = moist*100;
-  
+  $('#results').append(`<p>Moisure content is ${moistureContent}</p>`);
+  updateStore(moistureContent);
 }
 
-function finalDisplay(rainProbable, moistureContent) {
-  let water = //something : 'should' ? 'shouldn't';
-  $('#results').append(
-    `<p>It probably ${rain} rain</p>`
-    `<p>Moisure content is ${moistureContent}</p>`
-    `<p>So you ${water} water</p>`
-    )
+function updateStore(param) {
+  console.log('type', typeof param)
+  if (typeof param === 'string') {
+    STORE.rain = param
+  } else {
+    STORE.moistureContent = param
+  }
+  $('#updateResults').show();
+}
 
-
+function getSuggestionHtml(obj) {
+  console.log(obj);
+  if (obj.rain === 'will' && obj.moistureContent > 30) {
+    return "Don't water"
+  } else if (obj.rain === "won't" && obj.moistureContent > 30) {
+    return "Meow, don't water"
+  } else if (obj.rain ===  "won't" && obj.moistureContent < 30) {
+    return 'You should water'
+  }
 }
 
 
 function displayResults(ad, ci, st, z) {
-  //fetch with chained callbacks 
- 
+  //fetch with chained callbacks
+
   getCoordinates(ad, ci, st, z)
   .then(coordinates => makePolygon(coordinates))
   .then(polygon => getPolygon(polygon))
@@ -171,9 +188,8 @@ function displayResults(ad, ci, st, z) {
 
   getCoordinates(ad, ci, st, z)
   .then(coordinates => getRainForecast(coordinates))
-  .then(rainProbable => showRainForecast(rainProbable));
+  .then(rainProbable => showRainForecast(rainProbable))
 
-  
    //coordinates
 
 
@@ -183,6 +199,13 @@ function displayResults(ad, ci, st, z) {
   //5. getRainForecast from address
   //6. cleanup to reset form and clean up polygons
   //7. catch error for bad addresses
+}
+
+function watchButton() {
+  $('#updateResults').on('click', () => {
+    const suggestionHtml = getSuggestionHtml(STORE);
+    $('#suggestion').html(suggestionHtml)
+  })
 }
 
 
@@ -203,6 +226,7 @@ function watchForm() {
 function main() {
   console.log('App running');
   watchForm();
+  watchButton();
 
   //getPolygon();
 
