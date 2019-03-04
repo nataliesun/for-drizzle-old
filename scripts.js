@@ -27,14 +27,14 @@ function cleanup() {
 }
 
 function getRainForecast(array) {
-  let locationKeyReq = `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${array[1]},${array[0]}`;
+  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${array[1]},${array[0]}`;
 
   fetch(locationKeyReq).then(response => response.json())
     .then(responseJson => {
       let key = responseJson.Key;
 
       // let key = 2243127;
-      let forecastReq = `http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
+      let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
       fetch(forecastReq).then(response => response.json()).then(responseJson => {
         let rainProbable = false;
         responseJson.forEach(item => {
@@ -54,7 +54,7 @@ function getRainForecast(array) {
 
 function getMoisture(id) {
   // console.log(polyid);
-  const url = `http://api.agromonitoring.com/agro/1.0/soil?polyid=${id}&appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
+  const url = `https://api.agromonitoring.com/agro/1.0/soil?polyid=${id}&appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
   // console.log(url);
 
   return fetch(url)
@@ -69,7 +69,7 @@ function getMoisture(id) {
 
 
 function getPolygon(coordinates) {
-  const url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid=859dbb08fa72a87e13b7ac7d68ef66ed';
+  const url = 'https://api.agromonitoring.com/agro/1.0/polygons?appid=859dbb08fa72a87e13b7ac7d68ef66ed';
   // const coordinates = [
   //   [-121.1958,37.6683], [-121.1779,37.6687], [-121.1773,37.6792], [-121.1958,37.6792], [-121.1958,37.6683]
   // ];
