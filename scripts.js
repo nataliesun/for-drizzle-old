@@ -142,16 +142,20 @@ const STORE = {
   moistureContent: 0
 }
 
+const RESULTS_EL = $('#results');
+const SUGGESTION_EL = $('#suggestion');
+
+
 function showRainForecast(rainProbable){
   let rain = rainProbable ? "will" : "won't";
-  $('#results').append(`<p>It probably ${rain} rain</p>`);
+  RESULTS_EL.append(`<p>It probably ${rain} rain</p>`);
   STORE.rain = rainProbable;
   updateStore(rain);
 }
 
 function showMoistureContent(moist) {
   let moistureContent = moist*100;
-  $('#results').append(`<p>Moisure content is ${moistureContent}</p>`);
+  RESULTS_EL.append(`<p>Moisure content is ${moistureContent}</p>`);
   updateStore(moistureContent);
 }
 
@@ -170,7 +174,7 @@ function getSuggestionHtml(obj) {
   if (obj.rain === 'will' && obj.moistureContent > 30) {
     return "Don't water"
   } else if (obj.rain === "won't" && obj.moistureContent > 30) {
-    return "Meow, don't water"
+    return "Don't water"
   } else if (obj.rain ===  "won't" && obj.moistureContent < 30) {
     return 'You should water'
   }
@@ -179,7 +183,8 @@ function getSuggestionHtml(obj) {
 
 function displayResults(ad, ci, st, z) {
   //fetch with chained callbacks
-
+  RESULTS_EL.html('');
+  SUGGESTION_EL.html('');
   getCoordinates(ad, ci, st, z)
   .then(coordinates => makePolygon(coordinates))
   .then(polygon => getPolygon(polygon))
@@ -203,8 +208,9 @@ function displayResults(ad, ci, st, z) {
 
 function watchButton() {
   $('#updateResults').on('click', () => {
+    $('#updateResults').hide();
     const suggestionHtml = getSuggestionHtml(STORE);
-    $('#suggestion').html(suggestionHtml)
+    $('#suggestion').html(suggestionHtml);
   })
 }
 
