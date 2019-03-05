@@ -27,18 +27,21 @@ function cleanup() {
 }
 
 function getRainForecast(array) {
-  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${array[1]},${array[0]}`;
+  // let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${array[1]},${array[0]}`;
+  //
+  // fetch(locationKeyReq).then(response => response.json())
+  //   .then(responseJson => {
+  //     let key = responseJson.Key;
 
-  fetch(locationKeyReq).then(response => response.json())
-    .then(responseJson => {
-      let key = responseJson.Key;
-
-      // let key = 2243127;
+      let key = 2243127;
       let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
       fetch(forecastReq).then(response => response.json()).then(responseJson => {
         let rainProbable = false;
+        time = [];
+        hourlyProbability = [];
         responseJson.forEach(item => {
-          console.log(item.RainProbability);
+          time.push(item.DateTime);
+          hourlyProbability.push(item.RainProbability);
           if (item.RainProbability > 50) {
             rainProbable = true;
           }
@@ -46,7 +49,7 @@ function getRainForecast(array) {
           return rainProbable;
       })
     })
-  })
+  //})
 }
 
 // getRainForecast('30.372579','-89.451542');
@@ -149,7 +152,6 @@ const SUGGESTION_EL = $('#suggestion');
 function showRainForecast(rainProbable){
   let rain = rainProbable ? "will" : "won't";
   RESULTS_EL.append(`<p>It probably ${rain} rain</p>`);
-  STORE.rain = rainProbable;
   updateStore(rain);
 }
 
@@ -211,6 +213,7 @@ function watchButton() {
     $('#updateResults').hide();
     const suggestionHtml = getSuggestionHtml(STORE);
     $('#suggestion').html(suggestionHtml);
+    makeRainChart();
   })
 }
 
@@ -233,7 +236,6 @@ function main() {
   console.log('App running');
   watchForm();
   watchButton();
-
   //getPolygon();
 
 

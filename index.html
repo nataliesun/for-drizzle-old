@@ -2,6 +2,9 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js">
+
+    </script>
     <link rel="stylesheet" href="styles.css">
     <title>For Drizzle</title>
   </head>
@@ -32,11 +35,16 @@
 
           </div>
           <button type="button" name="button" id="updateResults" hidden>Show suggestion!</button>
+
+          <div class="container">
+            <canvas id="myChart" width="250" height="250"></canvas>
+          </div>
     </main>
 
 
 
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="charts.js"></script>
     <script type="text/javascript" src="scripts.js">
     </script>
   </body>
