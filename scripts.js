@@ -5,7 +5,6 @@ function displaySearches() {
   let count = 0;
 
   searchJ.forEach(item => {
-    console.log('search in displaySearches', search);
     let address = decodeURIComponent(item.address);
     let city = decodeURIComponent(item.city);
     let state = decodeURIComponent(item.state);
@@ -22,17 +21,10 @@ function watchSearchAgain() {
   $('.searches').on("click", '.searchAgain', function() {
   let search = window.localStorage.getItem('search');
   let searchJ = JSON.parse(search);
-  console.log('searchJ in displaySearches', searchJ);
-  
-  // let searchIndexTry = $(this).closest('p');
-  // console.log('searchIndexTry in displaySearches', searchIndexTry);
 
   let searchIndex = $(this).data('result');
-  console.log('searchIndex in displaySearches', searchIndex);
 
   let selectedSearch = searchJ[searchIndex];
-  console.log('selectedSearch in displaySearches', selectedSearch);
-
   
   let address = decodeURIComponent(selectedSearch.address);
   let city = decodeURIComponent(selectedSearch.city);
@@ -58,19 +50,20 @@ function cleanup() {
             let allPolygons = responseJson.map(poly => poly.id);
             deletePolygons(allPolygons);
         });
+}
 
+function getLocationKey(array) {
+  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&q=${array[1]},${array[0]}`;
+
+  return fetch(locationKeyReq).then(response => response.json())
+    .then(responseJson => responseJson.Key);
 }
 
 function getRainForecast(array) {
-  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&q=${array[1]},${array[0]}`;
-
-  fetch(locationKeyReq).then(response => response.json())
-    .then(responseJson => {
-      let key = responseJson.Key;
-
-      // let key = 2243127;
-      let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&details=true`;
-      fetch(forecastReq).then(response => response.json()).then(responseJson => {
+  getLocationKey(array).then(key => {
+    let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&details=true`;
+    
+    fetch(forecastReq).then(response => response.json()).then(responseJson => {
         let rainProbable = false;
         responseJson.forEach(item => {
           console.log(item.RainProbability);
@@ -80,31 +73,22 @@ function getRainForecast(array) {
           console.log(rainProbable);
           return rainProbable;
       })
-    })
+    }) 
   })
 }
 
 function getMoisture(id) {
 
   const url = `https://api.agromonitoring.com/agro/1.0/soil?polyid=${id}&appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
-  // console.log(url);
 
   return fetch(url)
   .then(response => response.json())
   .then(responseJson => responseJson.moisture)
-
-
-  //owner: Mengqi
-  //gets the moisture from polygon
-  //api url: https://agromonitoring.com/api
 }
 
 
 function getPolygon(coordinates) {
   const url = 'https://api.agromonitoring.com/agro/1.0/polygons?appid=859dbb08fa72a87e13b7ac7d68ef66ed';
-  // const coordinates = [
-  //   [-121.1958,37.6683], [-121.1779,37.6687], [-121.1773,37.6792], [-121.1958,37.6792], [-121.1958,37.6683]
-  // ];
   const body = {
     "name":"Polygon Sample",
     "geo_json":{
@@ -129,24 +113,18 @@ function getPolygon(coordinates) {
     body: JSON.stringify(body)
   }
 
-
   return fetch(url, options)
   .then(response => response.json())
   .then(responseJson => responseJson.id)
-
-  //owner: Mengqi
-  //makes polygon from coordinates
 }
 
 function makePolygon(array) {
-  //first and last the same
   const point1 = [array[0], array[1]];
   const point2 = [array[0]+0.00957, array[1]-0.000137];
   const point3 = [array[0]+0.0139, array[1]-0.005551];
   const point4 = [array[0]+0.00015, array[1]-0.005679];
   const point5 = [array[0], array[1]];
   return [point1, point2, point3, point4, point5];
-
 }
 
 function getCoordinates(ad, ci, st, z) {
@@ -212,7 +190,6 @@ function getSuggestionHtml(obj) {
   }
 }
 
-
 function displayResults(ad, ci, st, z) {
   //fetch with chained callbacks
   RESULTS_EL.html('');
@@ -227,14 +204,6 @@ function displayResults(ad, ci, st, z) {
   .then(coordinates => getRainForecast(coordinates))
   .then(rainProbable => showRainForecast(rainProbable))
 
-   //coordinates
-
-
-  //2. make call to getCoordinates
-  //3. getPolygon with coordinates
-  //4. getMoisture with polygon
-  //5. getRainForecast from address
-  //6. cleanup to reset form and clean up polygons
   //7. catch error for bad addresses
 }
 
@@ -245,7 +214,6 @@ function watchButton() {
     $('#suggestion').html(suggestionHtml);
   })
 }
-
 
 function watchForm() {
     $('#js-form').on('submit', function(event){
@@ -265,8 +233,6 @@ function watchForm() {
       let search = window.localStorage.getItem('search');
       let searchJ = JSON.parse(search);
 
-      
-
       if (search === null) {
         let addSearchesArr = [];
         addSearchesArr.push(searchInfo);
@@ -276,15 +242,11 @@ function watchForm() {
         window.localStorage.setItem('search', JSON.stringify(searchJ));
       }
       
-      
-
-      
       displayResults(address, city, state, zip);
       cleanup();
     })
 
 }
-
 
 function main() {
   console.log('App running');
@@ -295,10 +257,6 @@ function main() {
   watchForm();
   watchButton();
   watchSearchAgain();
-  //getPolygon();
-
-
 }
-
 
 $(main)
