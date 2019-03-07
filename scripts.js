@@ -1,6 +1,49 @@
-function deletePolygons(polygons) {
-  //owner: Julie
+function displaySearches() {
+  let search = window.localStorage.getItem('search');
+  let searchJ = JSON.parse(search);
 
+  let count = 0;
+
+  searchJ.forEach(item => {
+    console.log('search in displaySearches', search);
+    let address = decodeURIComponent(item.address);
+    let city = decodeURIComponent(item.city);
+    let state = decodeURIComponent(item.state);
+    let zip = decodeURIComponent(item.zip);
+    $('.searches').append(
+      `<p>${address}, ${city}, ${state}, ${zip}</p>
+      <button class="searchAgain" data-result="${count}">Search again</button>`
+    );
+    count++;
+  })
+};
+
+function watchSearchAgain() {
+  $('.searches').on("click", '.searchAgain', function() {
+  let search = window.localStorage.getItem('search');
+  let searchJ = JSON.parse(search);
+  console.log('searchJ in displaySearches', searchJ);
+
+  // let searchIndexTry = $(this).closest('p');
+  // console.log('searchIndexTry in displaySearches', searchIndexTry);
+
+  let searchIndex = $(this).data('result');
+  console.log('searchIndex in displaySearches', searchIndex);
+
+  let selectedSearch = searchJ[searchIndex];
+  console.log('selectedSearch in displaySearches', selectedSearch);
+
+
+  let address = decodeURIComponent(selectedSearch.address);
+  let city = decodeURIComponent(selectedSearch.city);
+  let state = decodeURIComponent(selectedSearch.state);
+  let zip = decodeURIComponent(selectedSearch.zip);
+
+  displayResults(address, city, state, zip);
+  })
+}
+
+function deletePolygons(polygons) {
   polygons.forEach(poly => {
     let deleteReq = `https://api.agromonitoring.com/agro/1.0/polygons/${poly}?appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
     let options = {method: 'DELETE'};
@@ -8,18 +51,10 @@ function deletePolygons(polygons) {
 }
 
 function cleanup() {
-  //owner: Julie
-  //cleans up polygons and resets form
-
-  // api endpoint for getting all of a user's polygons
   let allPolygonsReq = `https://api.agromonitoring.com/agro/1.0/polygons?appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
-
-  //fetch all polygons -- get list of polygons out of response and pass it to delete function
-
     fetch(allPolygonsReq)
         .then(response => response.json())
         .then(responseJson => {
-          console.log(responseJson);
             let allPolygons = responseJson.map(poly => poly.id);
             deletePolygons(allPolygons);
         });
@@ -27,20 +62,18 @@ function cleanup() {
 }
 
 function getRainForecast(array) {
-  // let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${array[1]},${array[0]}`;
-  //
-  // fetch(locationKeyReq).then(response => response.json())
-  //   .then(responseJson => {
-  //     let key = responseJson.Key;
+  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&q=${array[1]},${array[0]}`;
 
-      let key = 2243127;
-      let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
+  fetch(locationKeyReq).then(response => response.json())
+    .then(responseJson => {
+      let key = responseJson.Key;
+
+      // let key = 2243127;
+      let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&details=true`;
       fetch(forecastReq).then(response => response.json()).then(responseJson => {
         let rainProbable = false;
-        time = [];
-        hourlyProbability = [];
         responseJson.forEach(item => {
-          time.push(item.DateTime);
+          tempData.push(item.Temperature.Value);
           hourlyProbability.push(item.RainProbability);
           if (item.RainProbability > 50) {
             rainProbable = true;
@@ -49,14 +82,11 @@ function getRainForecast(array) {
           return rainProbable;
       })
     })
-  //})
+  })
 }
 
-// getRainForecast('30.372579','-89.451542');
-
-
 function getMoisture(id) {
-  // console.log(polyid);
+
   const url = `https://api.agromonitoring.com/agro/1.0/soil?polyid=${id}&appid=859dbb08fa72a87e13b7ac7d68ef66ed`;
   // console.log(url);
 
@@ -76,7 +106,6 @@ function getPolygon(coordinates) {
   // const coordinates = [
   //   [-121.1958,37.6683], [-121.1779,37.6687], [-121.1773,37.6792], [-121.1958,37.6792], [-121.1958,37.6683]
   // ];
-  console.log('getP', coordinates);
   const body = {
     "name":"Polygon Sample",
     "geo_json":{
@@ -130,6 +159,8 @@ function getCoordinates(ad, ci, st, z) {
   const state = encodeURIComponent(st);
   const zip = encodeURIComponent(z);
 
+
+  //add request to localStorage for later use
   return fetch (`https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?apiKey=ad7ae12b6267452bb43785a9d63ff348&version=4.01&streetAddress=${address}&city=${city}&zip=${zip}&format=json`)
   .then(response => response.json())
   .then(responseJ => {
@@ -152,6 +183,7 @@ const SUGGESTION_EL = $('#suggestion');
 function showRainForecast(rainProbable){
   let rain = rainProbable ? "will" : "won't";
   RESULTS_EL.append(`<p>It probably ${rain} rain</p>`);
+  STORE.rain = rainProbable;
   updateStore(rain);
 }
 
@@ -162,7 +194,6 @@ function showMoistureContent(moist) {
 }
 
 function updateStore(param) {
-  console.log('type', typeof param)
   if (typeof param === 'string') {
     STORE.rain = param
   } else {
@@ -214,7 +245,7 @@ function watchButton() {
     const suggestionHtml = getSuggestionHtml(STORE);
     $('#suggestion').html(suggestionHtml);
     makeRainChart();
-  })
+  });
 }
 
 
@@ -225,6 +256,31 @@ function watchForm() {
       const city = $('#city').val().trim();
       const state = $('#state').val().trim();
       const zip = $('#zip').val().trim();
+
+      const searchInfo = {
+        address: address,
+        city: city,
+        state: state,
+        zip: zip
+      };
+
+      let search = window.localStorage.getItem('search');
+      let searchJ = JSON.parse(search);
+
+
+
+      if (search === null) {
+        let addSearchesArr = [];
+        addSearchesArr.push(searchInfo);
+        window.localStorage.setItem('search', JSON.stringify(addSearchesArr));
+      } else {
+        searchJ.push(searchInfo);
+        window.localStorage.setItem('search', JSON.stringify(searchJ));
+      }
+
+
+
+
       displayResults(address, city, state, zip);
       cleanup();
     })
@@ -234,8 +290,13 @@ function watchForm() {
 
 function main() {
   console.log('App running');
+  let search = window.localStorage.getItem('search');
+  if (search !== null) {
+    displaySearches();
+  }
   watchForm();
   watchButton();
+  watchSearchAgain();
   //getPolygon();
 
 
