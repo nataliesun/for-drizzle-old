@@ -1,3 +1,5 @@
+
+
 function displaySearches() {
   let search = window.localStorage.getItem("search");
   let searchJ = JSON.parse(search);
@@ -22,7 +24,7 @@ function watchSearchAgain() {
     let search = window.localStorage.getItem("search");
     let searchJ = JSON.parse(search);
 
-    let searchIndex = $(this).data("result");
+    let searchIndex = $(this).data('result');
 
     let selectedSearch = searchJ[searchIndex];
 
@@ -31,8 +33,9 @@ function watchSearchAgain() {
     let state = decodeURIComponent(selectedSearch.state);
     let zip = decodeURIComponent(selectedSearch.zip);
 
-    displayResults(address, city, state, zip);
-  });
+  displayResults(address, city, state, zip);
+  })
+
 }
 
 function deletePolygons(polygons) {
@@ -59,28 +62,30 @@ function getLocationKey(array) {
   },${array[0]}`;
 
   return fetch(locationKeyReq)
-    .then(response => response.json())
-    .then(responseJson => responseJson.Key);
+  .then(response => response.json())
+  .then(responseJson => responseJson.Key);
 }
 
-function getRainForecast(array) {
-  getLocationKey(array).then(key => {
-    let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&details=true`;
+function getRainForecast(key) {
 
-    fetch(forecastReq)
-      .then(response => response.json())
-      .then(responseJson => {
-        let rainProbable = false;
-        responseJson.forEach(item => {
-          console.log(item.RainProbability);
-          if (item.RainProbability > 50) {
-            rainProbable = true;
-          }
-          console.log(rainProbable);
-          return rainProbable;
-        });
-      });
-  });
+    let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=NUwklQSrmbeN1wfH3DPqeIKtzV00ugJG&details=true`;
+
+    return fetch(forecastReq)
+    .then(response => response.json())
+    .then(responseJ => determineRainProbability(responseJ))
+}
+
+function determineRainProbability(forecastArray) {
+  let probability = false;
+  for (let i = 0; i < forecastArray.length; i++ ) {
+    let hourlyRainProb = forecastArray[i].RainProbability;
+    hourlyProbability.push(hourlyRainProb);
+    console.log('hour', hourlyRainProb);
+    if (hourlyRainProb >= 50) {
+      probability = true;
+    }
+  }
+  return probability;
 }
 
 function getMoisture(id) {
@@ -154,23 +159,24 @@ function getCoordinates(ad, ci, st, z) {
 }
 
 const STORE = {
-  rain: false,
+  rain: ``,
   moistureContent: 0
 };
 
 const RESULTS_EL = $("#results");
 const SUGGESTION_EL = $("#suggestion");
 
-function showRainForecast(rainProbable) {
+function showRainForecast(rainProbable){
+  console.log('rain?', rainProbable);
   let rain = rainProbable ? "will" : "won't";
+  console.log('rain word?', rain);
   RESULTS_EL.append(`<p>It probably ${rain} rain</p>`);
-  STORE.rain = rainProbable;
   updateStore(rain);
 }
 
 function showMoistureContent(moist) {
-  let moistureContent = moist * 100;
-  RESULTS_EL.append(`<p>Moisure content is ${moistureContent}</p>`);
+  let moistureContent = moist*100;
+  RESULTS_EL.append(`<p>Moisure content in your soil is ${moistureContent}% (percentage of water to soil)</p>`);
   updateStore(moistureContent);
 }
 
@@ -183,21 +189,25 @@ function updateStore(param) {
   $("#updateResults").show();
 }
 
-function getSuggestionHtml(obj) {
-  console.log(obj);
-  if (obj.rain === "will" && obj.moistureContent > 30) {
-    return "Don't water";
-  } else if (obj.rain === "won't" && obj.moistureContent > 30) {
-    return "Don't water";
-  } else if (obj.rain === "won't" && obj.moistureContent < 30) {
-    return "You should water";
+function getSuggestionHtml(storeObj) {
+  console.log('store', storeObj);
+  let suggestion = '';
+
+  if (storeObj.moistureContent >= 30) {
+    suggestion = `Don't water`;
+  }  else {
+    if (storeObj.rain ===  `won't`) {
+      suggestion = 'You should water';
+    } else if (storeObj.rain ===  'will') {
+      suggestion = `You shouldn't water`;
+    }
   }
+  return suggestion;
 }
 
 function displayResults(ad, ci, st, z) {
   //fetch with chained callbacks
-  RESULTS_EL.html("");
-  SUGGESTION_EL.html("");
+
   getCoordinates(ad, ci, st, z)
     .then(coordinates => makePolygon(coordinates))
     .then(polygon => getPolygon(polygon))
@@ -205,9 +215,10 @@ function displayResults(ad, ci, st, z) {
     .then(moist => showMoistureContent(moist));
 
   getCoordinates(ad, ci, st, z)
-    .then(coordinates => getRainForecast(coordinates))
-    .then(rainProbable => showRainForecast(rainProbable));
-
+  .then(coordinates => getLocationKey(coordinates))
+  .then(key => getRainForecast(key))
+  .then(rainProbable => showRainForecast(rainProbable))
+  
   getCoordinates(ad, ci, st, z).then(coordinates => displayMap(coordinates));
 
   //7. catch error for bad addresses
@@ -224,44 +235,40 @@ function watchButton() {
   $("#updateResults").on("click", () => {
     $("#updateResults").hide();
     const suggestionHtml = getSuggestionHtml(STORE);
-    $("#suggestion").html(suggestionHtml);
+    console.log('suggestion:', suggestionHtml);
+    SUGGESTION_EL.append(suggestionHtml);
+    makeWeatherCharts();
   });
 }
 
 function watchForm() {
-  $("#js-form").on("submit", function(event) {
-    event.preventDefault();
-    const address = $("#address")
-      .val()
-      .trim();
-    const city = $("#city")
-      .val()
-      .trim();
-    const state = $("#state")
-      .val()
-      .trim();
-    const zip = $("#zip")
-      .val()
-      .trim();
+    $('#js-form').on('submit', function(event){
+      event.preventDefault();
+      const address = $('#address').val().trim();
+      const city = $('#city').val().trim();
+      const state = $('#state').val().trim();
+      const zip = $('#zip').val().trim();
 
-    const searchInfo = {
-      address: address,
-      city: city,
-      state: state,
-      zip: zip
-    };
+      const searchInfo = {
+        address: address,
+        city: city,
+        state: state,
+        zip: zip
+      };
 
-    let search = window.localStorage.getItem("search");
-    let searchJ = JSON.parse(search);
+      let search = window.localStorage.getItem('search');
+      let searchJ = JSON.parse(search);
 
-    if (search === null) {
-      let addSearchesArr = [];
-      addSearchesArr.push(searchInfo);
-      window.localStorage.setItem("search", JSON.stringify(addSearchesArr));
-    } else {
-      searchJ.push(searchInfo);
-      window.localStorage.setItem("search", JSON.stringify(searchJ));
-    }
+      if (search === null) {
+        let addSearchesArr = [];
+        addSearchesArr.push(searchInfo);
+        window.localStorage.setItem('search', JSON.stringify(addSearchesArr));
+      } else {
+        searchJ.push(searchInfo);
+        window.localStorage.setItem('search', JSON.stringify(searchJ));
+      }
+      RESULTS_EL.html('');
+      SUGGESTION_EL.html('');
 
     displayResults(address, city, state, zip);
     cleanup();
