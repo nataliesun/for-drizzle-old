@@ -1,3 +1,13 @@
 * {
   font-family: sans-serif;
 }
+
+.col-2 {
+  width: 100%;
+}
+
+@media only screen and (min-width: 640px) {
+  .col-2 {
+    width: 50%;
+  }
+}
