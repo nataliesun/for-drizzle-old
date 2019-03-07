@@ -205,6 +205,8 @@ function getSuggestionHtml(storeObj) {
   return suggestion;
 }
 
+
+
 function displayResults(ad, ci, st, z) {
   //fetch with chained callbacks
 
@@ -212,14 +214,19 @@ function displayResults(ad, ci, st, z) {
     .then(coordinates => makePolygon(coordinates))
     .then(polygon => getPolygon(polygon))
     .then(id => getMoisture(id))
-    .then(moist => showMoistureContent(moist));
+    .then(moist => showMoistureContent(moist))
+    .finally(function() {
+      RESULTS_EL.find('#loading').remove();
+    });
 
   getCoordinates(ad, ci, st, z)
   .then(coordinates => getLocationKey(coordinates))
   .then(key => getRainForecast(key))
-  .then(rainProbable => showRainForecast(rainProbable))
-  
+  .then(rainProbable => showRainForecast(rainProbable));
+
+
   getCoordinates(ad, ci, st, z).then(coordinates => displayMap(coordinates));
+
 
   //7. catch error for bad addresses
 }
@@ -267,7 +274,7 @@ function watchForm() {
         searchJ.push(searchInfo);
         window.localStorage.setItem('search', JSON.stringify(searchJ));
       }
-      RESULTS_EL.html('');
+      RESULTS_EL.html(`<div id='loading'>Loading...</div>`);
       SUGGESTION_EL.html('');
 
     displayResults(address, city, state, zip);
