@@ -57,23 +57,44 @@ function cleanup() {
 }
 
 function getLocationKey(array) {
-  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&q=${
+
+
+//apikey1: al6kRy3N5JRgKrnOpGtBdJuvEKocl44u
+//apikey2: BLazK0LqHmOv7OY2GJLTS1xKRr4Msame
+//apikey3: IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow
+//apikey4: NUwklQSrmbeN1wfH3DPqeIKtzV00ugJG
+//apikey5: 4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD
+
+
+  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${
     array[1]
   },${array[0]}`;
 
   return fetch(locationKeyReq)
-  .then(response => response.json())
+  .then(response => {
+    if (response.status !== 200) {
+      throw new Error (response.Message);
+    }
+    return response.json()
+  })
   .then(responseJson => responseJson.Key);
 }
 
 function getRainForecast(key) {
 
-    let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=NUwklQSrmbeN1wfH3DPqeIKtzV00ugJG&details=true`;
+    let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
 
     return fetch(forecastReq)
-    .then(response => response.json())
+    .then(response => {
+      if (response.status !== 200) {
+        throw new Error (response.Message);
+      }
+      return response.json();
+    })
     .then(responseJ => determineRainProbability(responseJ))
+
 }
+
 
 function determineRainProbability(forecastArray) {
   let probability = false;
@@ -215,6 +236,7 @@ function displayResults(ad, ci, st, z) {
     .then(polygon => getPolygon(polygon))
     .then(id => getMoisture(id))
     .then(moist => showMoistureContent(moist))
+    .catch(error => alert('Unable to get rain data.'))
     .finally(function() {
       RESULTS_EL.find('#loading').remove();
     });
@@ -222,7 +244,8 @@ function displayResults(ad, ci, st, z) {
   getCoordinates(ad, ci, st, z)
   .then(coordinates => getLocationKey(coordinates))
   .then(key => getRainForecast(key))
-  .then(rainProbable => showRainForecast(rainProbable));
+  .then(rainProbable => showRainForecast(rainProbable))
+  .catch(error => alert('Unable to get rain data.'));
 
 
   getCoordinates(ad, ci, st, z).then(coordinates => displayMap(coordinates));
