@@ -32,7 +32,8 @@ function watchSearchAgain() {
     let city = decodeURIComponent(selectedSearch.city);
     let state = decodeURIComponent(selectedSearch.state);
     let zip = decodeURIComponent(selectedSearch.zip);
-
+    RESULTS_EL.html(`<div id='loading'>Loading...</div>`);
+    
   displayResults(address, city, state, zip);
   })
 
@@ -229,7 +230,8 @@ function getSuggestionHtml(storeObj) {
 
 
 function displayResults(ad, ci, st, z) {
-  //fetch with chained callbacks
+  SUGGESTION_EL.html('');
+  $("#map").empty();
 
   getCoordinates(ad, ci, st, z)
     .then(coordinates => makePolygon(coordinates))
@@ -298,7 +300,6 @@ function watchForm() {
         window.localStorage.setItem('search', JSON.stringify(searchJ));
       }
       RESULTS_EL.html(`<div id='loading'>Loading...</div>`);
-      SUGGESTION_EL.html('');
 
     displayResults(address, city, state, zip);
     cleanup();
