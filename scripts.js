@@ -71,12 +71,8 @@ function getLocationKey(array) {
   },${array[0]}`;
 
   return fetch(locationKeyReq)
-  .then(response => {
-    if (response.status !== 200) {
-      throw new Error (response.Message);
-    }
-    return response.json()
-  })
+  .then(handleErrors)
+  .then(response => response.json())
   .then(responseJson => responseJson.Key);
 }
 
@@ -85,14 +81,17 @@ function getRainForecast(key) {
     let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
 
     return fetch(forecastReq)
-    .then(response => {
-      if (response.status !== 200) {
-        throw new Error (response.Message);
-      }
-      return response.json();
-    })
+    .then(handleErrors)
+    .then(response => response.json())
     .then(responseJ => determineRainProbability(responseJ))
 
+}
+
+function handleErrors(response) { 
+  if (response.status !== 200) {
+     throw new Error ("Invalid request");
+  }
+  return response;
 }
 
 
@@ -101,7 +100,6 @@ function determineRainProbability(forecastArray) {
   for (let i = 0; i < forecastArray.length; i++ ) {
     let hourlyRainProb = forecastArray[i].RainProbability;
     hourlyProbability.push(hourlyRainProb);
-    console.log('hour', hourlyRainProb);
     if (hourlyRainProb >= 50) {
       probability = true;
     }
