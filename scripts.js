@@ -1,7 +1,17 @@
-
+function watchRemove() {
+  $(".searches").on("click", ".removeSearches", function (){
+    $(".searches").empty();
+    let search = window.localStorage.getItem("search");
+    window.localStorage.removeItem('search');
+  })
+  
+}
 
 function displaySearches() {
   let search = window.localStorage.getItem("search");
+  if (search !== null) {
+    $(".searches").append(`<button class="removeSearches">Clear searches</button>`);
+  }
   let searchJ = JSON.parse(search);
 
   let count = 0;
@@ -318,6 +328,7 @@ function main() {
   watchForm();
   watchButton();
   watchSearchAgain();
+  watchRemove();
 }
 
 $(main);
