@@ -72,12 +72,8 @@ function getLocationKey(array) {
   },${array[0]}`;
 
   return fetch(locationKeyReq)
-  .then(response => {
-    if (response.status !== 200) {
-      throw new Error (response.Message);
-    }
-    return response.json()
-  })
+  .then(handleErrors)
+  .then(response => response.json())
   .then(responseJson => responseJson.Key);
 }
 
@@ -86,14 +82,17 @@ function getRainForecast(key) {
     let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
 
     return fetch(forecastReq)
-    .then(response => {
-      if (response.status !== 200) {
-        throw new Error (response.Message);
-      }
-      return response.json();
-    })
+    .then(handleErrors)
+    .then(response => response.json())
     .then(responseJ => determineRainProbability(responseJ))
 
+}
+
+function handleErrors(response) { 
+  if (response.status !== 200) {
+     throw new Error ("Invalid request");
+  }
+  return response;
 }
 
 
@@ -102,7 +101,6 @@ function determineRainProbability(forecastArray) {
   for (let i = 0; i < forecastArray.length; i++ ) {
     let hourlyRainProb = forecastArray[i].RainProbability;
     hourlyProbability.push(hourlyRainProb);
-    console.log('hour', hourlyRainProb);
     if (hourlyRainProb >= 50) {
       probability = true;
     }
@@ -168,17 +166,20 @@ function getCoordinates(ad, ci, st, z) {
   return fetch(
     `https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?apiKey=ad7ae12b6267452bb43785a9d63ff348&version=4.01&streetAddress=${address}&city=${city}&zip=${zip}&format=json`
   )
+    .then(handleErrors)
     .then(response => response.json())
     .then(responseJ => {
-      const lat = parseFloat(
-        responseJ.OutputGeocodes[0].OutputGeocode.Latitude
-      );
-      const long = parseFloat(
-        responseJ.OutputGeocodes[0].OutputGeocode.Longitude
-      );
-      return [long, lat];
-    });
+      if (responseJ.FeatureMatchingResultType !== "Success") {
+        throw new Error("Invalid Address!")
+      }
+      else {
+        const lat = parseFloat(responseJ.OutputGeocodes[0].OutputGeocode.Latitude);
+        const long = parseFloat(responseJ.OutputGeocodes[0].OutputGeocode.Longitude);
+        return [long, lat];
+      }
+    })
 }
+
 
 const STORE = {
   rain: ``,
@@ -238,7 +239,7 @@ function displayResults(ad, ci, st, z) {
     .then(polygon => getPolygon(polygon))
     .then(id => getMoisture(id))
     .then(moist => showMoistureContent(moist))
-    .catch(error => alert('Unable to get rain data.'))
+    .catch(error => alert(error.message))
     .finally(function() {
       RESULTS_EL.find('#loading').remove();
     });
@@ -247,10 +248,12 @@ function displayResults(ad, ci, st, z) {
   .then(coordinates => getLocationKey(coordinates))
   .then(key => getRainForecast(key))
   .then(rainProbable => showRainForecast(rainProbable))
-  .catch(error => alert('Unable to get rain data.'));
+  .catch(error => alert(error.message));
 
 
-  getCoordinates(ad, ci, st, z).then(coordinates => displayMap(coordinates));
+  getCoordinates(ad, ci, st, z)
+  .then(coordinates => displayMap(coordinates))
+  .catch(error => alert(error.message));
 
 
   //7. catch error for bad addresses
