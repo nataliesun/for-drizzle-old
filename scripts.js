@@ -4,7 +4,6 @@ function watchRemove() {
     let search = window.localStorage.getItem("search");
     window.localStorage.removeItem('search');
   })
-  
 }
 
 function displaySearches() {
@@ -213,6 +212,11 @@ function showMoistureContent(moist) {
   updateStore(moistureContent);
 }
 
+function showEverything(moist, rainProbable) {
+  showMoistureContent(moist);
+  showRainForecast(rainProbable);
+}
+
 function updateStore(param) {
   if (typeof param === "string") {
     STORE.rain = param;
@@ -245,28 +249,18 @@ function displayResults(ad, ci, st, z) {
   $("#map").empty();
 
   getCoordinates(ad, ci, st, z)
-    .then(coordinates => makePolygon(coordinates))
-    .then(polygon => getPolygon(polygon))
-    .then(id => getMoisture(id))
-    .then(moist => showMoistureContent(moist))
+    .then(coordinates => {
+      return Promise.all([makePolygon(coordinates), getLocationKey(coordinates), displayMap(coordinates)])
+      .then(([ polygon, key ]) => {
+        return Promise.all([getPolygon(polygon).then(id => getMoisture(id)), getRainForecast(key)])
+          .then(([moist, rainProbable]) => showEverything(moist, rainProbable)
+          )}
+      )}
+    ) 
     .catch(error => alert(error.message))
     .finally(function() {
       RESULTS_EL.find('#loading').remove();
-    });
-
-  getCoordinates(ad, ci, st, z)
-  .then(coordinates => getLocationKey(coordinates))
-  .then(key => getRainForecast(key))
-  .then(rainProbable => showRainForecast(rainProbable))
-  .catch(error => alert(error.message));
-
-
-  getCoordinates(ad, ci, st, z)
-  .then(coordinates => displayMap(coordinates))
-  .catch(error => alert(error.message));
-
-
-  //7. catch error for bad addresses
+  })
 }
 
 function displayMap(array) {
