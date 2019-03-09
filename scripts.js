@@ -1,7 +1,6 @@
 function watchRemove() {
   $(".searches").on("click", ".removeSearches", function (){
     $(".searches").empty();
-    let search = window.localStorage.getItem("search");
     window.localStorage.removeItem('search');
   })
 }
@@ -68,13 +67,11 @@ function cleanup() {
 
 function getLocationKey(array) {
 
-
-//apikey1: al6kRy3N5JRgKrnOpGtBdJuvEKocl44u
-//apikey2: BLazK0LqHmOv7OY2GJLTS1xKRr4Msame
-//apikey3: IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow
-//apikey4: NUwklQSrmbeN1wfH3DPqeIKtzV00ugJG
-//apikey5: 4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD
-
+  //apikey1: al6kRy3N5JRgKrnOpGtBdJuvEKocl44u
+  //apikey2: BLazK0LqHmOv7OY2GJLTS1xKRr4Msame
+  //apikey3: IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow
+  //apikey4: NUwklQSrmbeN1wfH3DPqeIKtzV00ugJG
+  //apikey5: 4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD
 
   let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${
     array[1]
@@ -94,7 +91,6 @@ function getRainForecast(key) {
     .then(handleErrors)
     .then(response => response.json())
     .then(responseJ => determineRainProbability(responseJ))
-
 }
 
 function handleErrors(response) { 
@@ -103,7 +99,6 @@ function handleErrors(response) {
   }
   return response;
 }
-
 
 function determineRainProbability(forecastArray) {
   let probability = false;
@@ -163,15 +158,11 @@ function makePolygon(array) {
 }
 
 function getCoordinates(ad, ci, st, z) {
-  //owner: Natalie
-  //make fetch call to getcoordinates passing in formatAddress
-  //api url: http://geoservices.tamu.edu
   const address = encodeURIComponent(ad);
   const city = encodeURIComponent(ci);
   const state = encodeURIComponent(st);
   const zip = encodeURIComponent(z);
 
-  //add request to localStorage for later use
   return fetch(
     `https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?apiKey=ad7ae12b6267452bb43785a9d63ff348&version=4.01&streetAddress=${address}&city=${city}&zip=${zip}&format=json`
   )
@@ -189,60 +180,19 @@ function getCoordinates(ad, ci, st, z) {
     })
 }
 
-
-const STORE = {
-  rain: ``,
-  moistureContent: 0
-};
-
 const RESULTS_EL = $("#results");
 const SUGGESTION_EL = $("#suggestion");
 
-function showRainForecast(rainProbable){
-  console.log('rain?', rainProbable);
-  let rain = rainProbable ? "will" : "won't";
-  console.log('rain word?', rain);
-  RESULTS_EL.append(`<p>It probably ${rain} rain</p>`);
-  updateStore(rain);
-}
-
-function showMoistureContent(moist) {
-  let moistureContent = moist*100;
-  RESULTS_EL.append(`<p>Moisure content in your soil is ${moistureContent}% (percentage of water to soil)</p>`);
-  updateStore(moistureContent);
-}
-
 function showEverything(moist, rainProbable) {
-  showMoistureContent(moist);
-  showRainForecast(rainProbable);
+  let moistureContent = moist*100;
+  let rain = rainProbable ? `will` : `won't`;
+  let suggestion = ((moistureContent >= 30) || rainProbable) ? `you don't need to water` : `you should water`;
+
+  let resultStr = `<p>The moisure content of your soil is ${moistureContent}% and it probably ${rain} rain in the next 12 hours so ... ${suggestion}</p>`
+  SUGGESTION_EL.append(resultStr);
+
+  makeWeatherCharts();
 }
-
-function updateStore(param) {
-  if (typeof param === "string") {
-    STORE.rain = param;
-  } else {
-    STORE.moistureContent = param;
-  }
-  $("#updateResults").show();
-}
-
-function getSuggestionHtml(storeObj) {
-  console.log('store', storeObj);
-  let suggestion = '';
-
-  if (storeObj.moistureContent >= 30) {
-    suggestion = `Don't water`;
-  }  else {
-    if (storeObj.rain ===  `won't`) {
-      suggestion = 'You should water';
-    } else if (storeObj.rain ===  'will') {
-      suggestion = `You shouldn't water`;
-    }
-  }
-  return suggestion;
-}
-
-
 
 function displayResults(ad, ci, st, z) {
   SUGGESTION_EL.html('');
@@ -268,16 +218,6 @@ function displayMap(array) {
   $("#map").append(
     `<img src="https://maps.googleapis.com/maps/api/staticmap?size=400x400&markers=color:blue%7C${array[1]},${array[0]}&key=AIzaSyB1CRKX58WoY0erbMTwbYTW_U9Quq74QYQ">`
   );
-}
-
-function watchButton() {
-  $("#updateResults").on("click", () => {
-    $("#updateResults").hide();
-    const suggestionHtml = getSuggestionHtml(STORE);
-    console.log('suggestion:', suggestionHtml);
-    SUGGESTION_EL.append(suggestionHtml);
-    makeWeatherCharts();
-  });
 }
 
 function watchForm() {
@@ -320,7 +260,6 @@ function main() {
     displaySearches();
   }
   watchForm();
-  watchButton();
   watchSearchAgain();
   watchRemove();
 }
