@@ -14,9 +14,7 @@ body {
   src: url("assets/Human_Nature-Demo.ttf");
 }
 
-.col-2 {
-  width: 100%;
-}
+
 
 header {
   display: flex;
@@ -58,13 +56,65 @@ header button {
   letter-spacing: 1px;
   font-family: 'Montserrat', sans-serif;
   border-radius: 4%;
-  font-style: 34px;
+  font-size: 16px;
 }
 
 header button:hover {
   background-color: white;
   color: black;
   cursor: pointer;
+}
+
+#past-searches {
+  display: inline;
+  /* flex-direction: row;
+  align-items: right;
+  text-align: center; */
+  display: none;
+  font-family: 'Ruluko', sans-serif;
+}
+
+#past-searches button {
+  width: auto;
+  padding: 5px;
+  margin: 15px 0;
+  background-color: rgba(0,0,0,0);
+  color: black;
+  border: 2px solid black;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  border-radius: 4%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#searches-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+
+#searches-show {
+  width: auto;
+  padding: 5px;
+  margin-top: 45px;
+  background-color: rgba(0,0,0,0);
+  color: black;
+  border: 2px solid black;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  border-radius: 4%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#searches-container button:hover {
+
+  background-color: rgb(49,194,253);
+  color: white;
+  border-color: rgb(49,194,253);
+  cursor: pointer;
+
 }
 
 fieldset {
@@ -75,13 +125,13 @@ fieldset {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  height: 75vh;
+  height: 100vh;
 }
 
 legend {
   font-size: 30px;
   font-family: 'Ruluko', sans-serif;
-  padding: 65px 0px 35px;
+  padding: 45px 0px 35px;
 }
 
 label {
@@ -124,13 +174,36 @@ input:hover {
   cursor: pointer;
 }
 
-#form-container {
+/* #form-container {
   background-image: url("assets/icon.svg");
   background-size: contain;
   background-position: bottom;
   background-repeat: no-repeat;
+} */
+
+#icon {
+  width: 350px;
+  height: 150px;
+  position: absolute;
+  left: 250px;
+  bottom: 0px;
+
 }
 
+#submit-container {
+  background-image: url('assets/icon.svg');
+  background-size:contain;
+  background-repeat: no-repeat;
+  background-position: right;
+  height: 30%;
+  width: 45%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#suggestion {
+  background: rgba(79,144,29,0.25);
+}
 #suggestion p {
   font-family: 'Ruluko', sans-serif;
   margin: auto;
@@ -142,19 +215,40 @@ input:hover {
   animation-name: animation;
   animation-duration: 4s;
   animation-fill-mode: forwards;
+
+}
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#map img {
+  width: 100%;
+  margin-top: 35px;
 }
 
 @keyframes animation {
   0% {
     color: white;
-  } 
+  }
   25% {
     color: rgba(187, 187, 173, 0.753);
-
-  } 
+  }
   50% {
     color: rgba(165, 165, 179, 0.315);
-  } 
+  }
   100% {
     color: black;
     font-size: 30px;
@@ -162,8 +256,14 @@ input:hover {
 }
 
 
-@media only screen and (min-width: 640px) {
-  .col-2 {
-    width: 50%;
+@media only screen and (max-width: 320px) {
+
+
+  header h1 {
+    font-size: 56px;
+  }
+
+  header p {
+    font-size: 16px;
   }
 }

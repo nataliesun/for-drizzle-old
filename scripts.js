@@ -41,7 +41,7 @@ function watchSearchAgain() {
     let state = decodeURIComponent(selectedSearch.state);
     let zip = decodeURIComponent(selectedSearch.zip);
     RESULTS_EL.html(`<div id='loading'>Loading...</div>`);
-    
+
   displayResults(address, city, state, zip);
   })
 
@@ -93,7 +93,7 @@ function getRainForecast(key) {
     .then(responseJ => determineRainProbability(responseJ))
 }
 
-function handleErrors(response) { 
+function handleErrors(response) {
   if (response.status !== 200) {
      throw new Error ("Invalid request");
   }
@@ -206,10 +206,10 @@ function displayResults(ad, ci, st, z) {
           .then(([moist, rainProbable]) => showEverything(moist, rainProbable)
           )}
       )}
-    ) 
+    )
     .catch(error => alert(error.message))
     .finally(function() {
-      RESULTS_EL.find('#loading').remove();
+      RESULTS_EL.find('#loading').hide();
   })
 }
 
@@ -246,11 +246,25 @@ function watchForm() {
         searchJ.push(searchInfo);
         window.localStorage.setItem('search', JSON.stringify(searchJ));
       }
-      RESULTS_EL.html(`<div id='loading'>Loading...</div>`);
+      RESULTS_EL.find('#loading').show();
 
     displayResults(address, city, state, zip);
     cleanup();
   });
+}
+
+function searchesSlide() {
+  const button = $('#searches-show')
+  button.on('click', () => {
+    $('#past-searches').toggle('slow');
+
+    if (button.html() === "Past Searches") {
+      button.html('X');
+    } else  {
+      button.html('Past Searches')
+    };
+  });
+
 }
 
 function main() {
@@ -262,6 +276,7 @@ function main() {
   watchForm();
   watchSearchAgain();
   watchRemove();
+  searchesSlide();
 }
 
 $(main);

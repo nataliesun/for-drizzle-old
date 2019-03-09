@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Ruluko" rel="stylesheet">
 
     <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="float-grid.css">
     <link rel="stylesheet" href="styles.css">
     <title>For Drizzle</title>
   </head>
@@ -16,12 +17,17 @@
       <button type="button" name="info">More Info</button>
     </header>
     <main>
-      <div class="searches">
-      </div>
-      
+
+      <section id="searches-container">
+        <button type="button" name="button" id="searches-show">Past Searches</button>
+        <div class="searches" id="past-searches">
+        </div>
+
+      </section>
       <section id="form-container">
           <form id="js-form">
             <fieldset>
+              <!-- <img src="assets/icon.svg" alt="" id="icon"> -->
               <legend>Enter Address</legend>
               <input type="text" name="address" id="address" required>
               <label for="address">Street Address</label>
@@ -31,26 +37,31 @@
               <label for="state">State</label>
               <input type="text" name="zip" id="zip" required>
               <label for="zip">Zip</label>
-              <input type="submit" value="Submit" id="submit">
+              <div id="submit-container">
+                <input type="submit" value="Submit" id="submit">
+              </div>
             </fieldset>
           </form>
         </section>
 
-        <!-- <img src="assets/icon.svg" alt=""> -->
+
 
         <section id="result-container">
-          <div id="results"></div>
+
+          <div id="results">
+            <div class="loader" id="loading" hidden></div>
+          </div>
           <div id='suggestion'></div>
           <!-- <button type="button" name="button" id="updateResults" hidden>Show suggestion!</button> -->
-        </section>
 
-          <div id="map"></div>
 
-          <div class="">
-            <div class="col-2">
-              <canvas id="myChart"></canvas>
-            </div>
+        <div class="row">
+          <div class="col-2">
+            <canvas id="myChart"></canvas>
           </div>
+          <div class="col-2" id="map"></div>
+        </div>
+        </section>
     </main>
 
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
