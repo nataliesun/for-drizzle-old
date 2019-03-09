@@ -35,7 +35,7 @@ header h1 {
   font-family: 'HumanNature';
   font-size: 86px;
   font-weight: 300;
-  text-shadow: 1px 1px black;
+  text-shadow: 1px 1px #717272;
   margin-bottom: 35px;
 }
 
@@ -79,8 +79,8 @@ header button:hover {
   padding: 5px;
   margin: 15px 0;
   background-color: rgba(0,0,0,0);
-  color: black;
-  border: 2px solid black;
+  color: #717272;
+  border: 2px solid #717272;
   letter-spacing: 1px;
   font-family: sans-serif;
   border-radius: 4%;
@@ -97,11 +97,12 @@ header button:hover {
 
 #searches-show {
   width: auto;
-  padding: 5px;
+  padding: 0 15px;
+  height: 48px;
   margin-top: 45px;
   background-color: rgba(0,0,0,0);
-  color: black;
-  border: 2px solid black;
+  color: #717272;
+  border: 2px solid #717272;
   letter-spacing: 1px;
   font-family: sans-serif;
   border-radius: 4%;
@@ -132,10 +133,12 @@ legend {
   font-size: 30px;
   font-family: 'Ruluko', sans-serif;
   padding: 45px 0px 35px;
+
 }
 
 label {
   font-family: 'Ruluko', sans-serif;
+  color: #717272;
   margin: 10px;
   font-size: 14px;
 }
@@ -202,10 +205,10 @@ input:hover {
 }
 
 #suggestion {
-  background: rgba(79,144,29,0.25);
+  background: rgba(79,144,29,0.05);
 }
 #suggestion p {
-  font-family: 'Ruluko', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin: auto;
   padding: 40px 0px;
   text-align: center;
@@ -215,7 +218,7 @@ input:hover {
   animation-name: animation;
   animation-duration: 4s;
   animation-fill-mode: forwards;
-
+  color: white;
 }
 
 .loader {
@@ -239,19 +242,24 @@ input:hover {
   margin-top: 35px;
 }
 
+canvas {
+  margin-top: 35px;
+}
+
 @keyframes animation {
   0% {
     color: white;
   }
   25% {
-    color: rgba(187, 187, 173, 0.753);
+    color: rgba(187, 187, 173, 0.353);
   }
   50% {
-    color: rgba(165, 165, 179, 0.315);
+    color: rgba(165, 165, 179, 0.715);
   }
   100% {
-    color: black;
-    font-size: 30px;
+    color: #717272;
+    font-size: 20px;
+    font-weight: lighter;
   }
 }
 
