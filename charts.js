@@ -1,4 +1,4 @@
-let date = new Date();
+let date = new Date(); //gets date
 let now = date.getHours();
 
 let time = getTwelveHours(now);
@@ -6,6 +6,7 @@ let hourlyProbability = [];
 let tempData = [];
 
 function getTwelveHours(current) {
+  //gets the next twelve hours from now and formats in XXam/pm form
   let nextTwelve = [];
   for (let i = 0; i < 12; i++) {
     let nextHour = current + i;
@@ -22,8 +23,7 @@ function getTwelveHours(current) {
   return nextTwelve;
 }
 
-
-
+//makes the rain probability chart
 function makeWeatherCharts() {
 
 let rainChart = document.getElementById('myChart').getContext('2d');
@@ -49,17 +49,6 @@ let rainProbChart = new Chart(rainChart, {
         display: true,
         text: 'Rain Probability'
       }
-    // scales: {
-    //   yAxes: [{
-    //     ticks: {
-    //       suggestedMax: 100
-    //     }
-    //   }]
-    // }
     },
-
-
   });
-
-
 }

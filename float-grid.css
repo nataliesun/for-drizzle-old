@@ -1,6 +1,7 @@
 * {
   box-sizing: border-box;
 }
+
 .row {
   max-width: 1000px;
   padding-left: 20px;
@@ -33,7 +34,7 @@
 }
 
 /* Mobile defaults */
-.col-2 {
+.col-2, .col-1 {
   width: 100%;
 }
 

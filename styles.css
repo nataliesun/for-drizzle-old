@@ -109,12 +109,10 @@ header button:hover {
 }
 
 #searches-container button:hover {
-
   background-color: rgb(49,194,253);
   color: white;
   border-color: rgb(49,194,253);
   cursor: pointer;
-
 }
 
 fieldset {

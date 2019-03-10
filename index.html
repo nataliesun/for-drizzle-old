@@ -28,7 +28,6 @@
       <section id="form-container">
           <form id="js-form">
             <fieldset>
-              <!-- <img src="assets/icon.svg" alt="" id="icon"> -->
               <legend>Enter Address</legend>
               <input type="text" name="address" id="address" required>
               <label for="address">Street Address</label>
@@ -49,7 +48,9 @@
           <div id="results">
             <div class="loader" id="loading" hidden></div>
           </div>
-          <div class="row col-1"id='suggestion'></div>
+
+          <div class="row col-1"id='suggestion'>
+          </div>
 
           <div class="row">
             <div class="col-2 chart">
@@ -59,9 +60,12 @@
           </div>
         </section>
 
-        <footer id="more-info" class="row">
-          <h2 class="col-2">About This App</h2>
-          <p class="col-2">Moisture content is the percentage of water to soil. We use Accuweather and Agromonitoring APIs for rain probability and soil moisture content.</p>
+        <footer id="more-info">
+          <div class="row">
+            <h2 class="col-2">About This App</h2>
+            <p class="col-2">Soil moisture content is the percentage of water to soil. These readings are taken twice a day. We use Accuweather and Agromonitoring APIs for rain probability and soil moisture content. This app recommends watering if the hourly chance of
+            rain (obtained from Accuweather’s API isn’t above 50% in the next 12 hours.</p>
+          </div>
         </footer>
     </main>
 
