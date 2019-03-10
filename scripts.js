@@ -217,7 +217,12 @@ function showEverything(moist, rainProbable) {
 function displayResults(ad, ci, st, z) {
   //clears the suggestion div and old map when the user searches again
   SUGGESTION_EL.html('');
-  $("#map").empty();
+  $('fieldset').css({
+    'background': '',
+    'background-repeat': '',
+    'background-position': '',
+    'background-size': ''
+  });
 
   //makes fetches to each API in order for the data to be used for the next -- ends up with moisture content and rain forecast
   getCoordinates(ad, ci, st, z)
@@ -246,10 +251,12 @@ function handleErrors(response) {
 
 function displayMap(array) {
   //uses google's map img api to diplay the user's input location
-  let displayMapReq;
-  $("#map").append(
-    `<img src="https://maps.googleapis.com/maps/api/staticmap?size=400x400&markers=color:blue%7C${array[1]},${array[0]}&key=AIzaSyB1CRKX58WoY0erbMTwbYTW_U9Quq74QYQ">`
-  );
+  $('fieldset').css({
+    'background': `url("https://maps.googleapis.com/maps/api/staticmap?size=800x800&markers=color:blue%7C${array[1]},${array[0]}&key=AIzaSyB1CRKX58WoY0erbMTwbYTW_U9Quq74QYQ")`,
+    'background-repeat': 'no-repeat',
+    'background-position': 'center',
+    'background-size': '65%'
+  });
 }
 
 function watchForm() {
