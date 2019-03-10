@@ -44,6 +44,7 @@ let rainProbChart = new Chart(rainChart, {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       title: {
         display: true,
         text: 'Rain Probability'

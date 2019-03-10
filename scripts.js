@@ -40,7 +40,7 @@ function watchSearchAgain() {
     let city = decodeURIComponent(selectedSearch.city);
     let state = decodeURIComponent(selectedSearch.state);
     let zip = decodeURIComponent(selectedSearch.zip);
-    RESULTS_EL.html(`<div id='loading'>Loading...</div>`);
+    RESULTS_EL.find('#loading').show();
 
   displayResults(address, city, state, zip);
   })

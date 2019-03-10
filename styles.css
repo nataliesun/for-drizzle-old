@@ -5,16 +5,14 @@
   box-sizing: border-box;
 }
 
-body {
-
+html {
+  scroll-behavior: smooth;
 }
 
 @font-face {
   font-family: HumanNature;
   src: url("assets/Human_Nature-Demo.ttf");
 }
-
-
 
 header {
   display: flex;
@@ -44,7 +42,8 @@ header p {
   font-family: 'Ruluko', sans-serif;
   letter-spacing: .5px;
   font-size: 20px;
-  padding: 50px;
+  padding: 50px 0 45px;
+  max-width: 1000px;
 }
 
 header button {
@@ -66,12 +65,12 @@ header button:hover {
 }
 
 #past-searches {
-  display: inline;
-  /* flex-direction: row;
-  align-items: right;
-  text-align: center; */
   display: none;
   font-family: 'Ruluko', sans-serif;
+}
+
+#past-searches p {
+  font-family: 'Montserrat', sans-serif;
 }
 
 #past-searches button {
@@ -79,8 +78,8 @@ header button:hover {
   padding: 5px;
   margin: 15px 0;
   background-color: rgba(0,0,0,0);
-  color: #717272;
-  border: 2px solid #717272;
+  color: black;
+  border: 2px solid black;
   letter-spacing: 1px;
   font-family: sans-serif;
   border-radius: 4%;
@@ -101,8 +100,8 @@ header button:hover {
   height: 48px;
   margin-top: 45px;
   background-color: rgba(0,0,0,0);
-  color: #717272;
-  border: 2px solid #717272;
+  color: black;
+  border: 2px solid black;
   letter-spacing: 1px;
   font-family: sans-serif;
   border-radius: 4%;
@@ -131,7 +130,7 @@ fieldset {
 
 legend {
   font-size: 30px;
-  font-family: 'Ruluko', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   padding: 45px 0px 35px;
 
 }
@@ -177,22 +176,6 @@ input:hover {
   cursor: pointer;
 }
 
-/* #form-container {
-  background-image: url("assets/icon.svg");
-  background-size: contain;
-  background-position: bottom;
-  background-repeat: no-repeat;
-} */
-
-#icon {
-  width: 350px;
-  height: 150px;
-  position: absolute;
-  left: 250px;
-  bottom: 0px;
-
-}
-
 #submit-container {
   background-image: url('assets/icon.svg');
   background-size:contain;
@@ -207,13 +190,14 @@ input:hover {
 #suggestion {
   background: rgba(79,144,29,0.05);
 }
+
 #suggestion p {
   font-family: 'Montserrat', sans-serif;
   margin: auto;
-  padding: 40px 0px;
+  padding: 40px 15px;
   text-align: center;
   font-size: 20px;
-  width: 80%;
+  /* width: 80%; */
   line-height: 2;
   animation-name: animation;
   animation-duration: 4s;
@@ -240,6 +224,7 @@ input:hover {
 #map img {
   width: 100%;
   margin-top: 35px;
+  padding-bottom: 35px;
 }
 
 canvas {
@@ -251,27 +236,65 @@ canvas {
     color: white;
   }
   25% {
-    color: rgba(187, 187, 173, 0.353);
+    color: rgb(175, 175, 175);
   }
   50% {
-    color: rgba(165, 165, 179, 0.715);
+    color: rgb(95, 95, 95);
   }
   100% {
-    color: #717272;
+    color: #5e5e5e;
+
     font-size: 20px;
     font-weight: lighter;
   }
 }
 
+footer {
+  padding: 15px;
+  color: #5e5e5e;
+  background-color: rgb(253, 247, 239);
+}
 
+footer p {
+  font-family: 'Ruluko', sans-serif;
+  line-height: 2;
+}
+
+footer h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+  padding-bottom: 10px;
+  color: #6e6e6e;
+}
+
+.chart {
+  height: 25vh;
+}
+
+@media only screen and (max-width: 375px) {
+
+  #submit-container {
+  background-image: url('assets/icon.svg');
+  background-size: 175px;
+  background-repeat: no-repeat;
+  background-position: 90% 10%;
+  height: 40%;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  }
+
+  .chart {
+    height: 45vh;
+  }
+}
+
+/* ---Iphone SE--- */
 @media only screen and (max-width: 320px) {
 
-
   header h1 {
-    font-size: 56px;
+    font-size:66px;
   }
 
-  header p {
-    font-size: 16px;
-  }
 }

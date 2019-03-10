@@ -19,7 +19,7 @@
   clear: both;
 }
 
-.col-2 {
+.col-2, .col-1 {
   float: left;
 
   /* Gutters:
@@ -43,6 +43,14 @@
   /* 3 columns, 3/12 in % */
   .col-2 {
     width: 50%;
+  }
+
+  .col-1 {
+    width: 100%;
+  }
+
+  footer {
+      padding: 35px 15%;
   }
 
 }
