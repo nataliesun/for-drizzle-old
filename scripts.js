@@ -93,7 +93,7 @@ function getLocationKey(array) {
   //apikey5: 4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD
 
   //function takes in coordinates array and gets a key to use in getRainForecast's API call
-  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow=${
+  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&q=${
     array[1]
   },${array[0]}`;
 
