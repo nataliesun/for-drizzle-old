@@ -204,7 +204,7 @@ const SUGGESTION_EL = $("#suggestion");
 
 function showEverything(moist, rainProbable) {
   //displays to the DOM the html using the data from API fetches
-  let moistureContent = moist*100;
+  let moistureContent = Math.round(moist*100);
   let rain = rainProbable ? `will` : `won't`;
   let suggestion = ((moistureContent >= 25) || rainProbable) ? `You don't need to water` : `You should water`;
 

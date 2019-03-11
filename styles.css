@@ -272,9 +272,18 @@ footer h2 {
   padding-bottom: 10px;
   color: #6e6e6e;
 }
+/* 
+#myChart {
+  margin-left: 50%;
+  margin-right: 50%;
+} */
 
 .chart {
   height: 25vh;
+}
+
+.row h2 {
+  text-align: center;
 }
 
 @media only screen and (max-width: 375px) {

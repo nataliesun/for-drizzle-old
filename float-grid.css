@@ -21,7 +21,7 @@
 }
 
 .col-2, .col-1 {
-  float: left;
+  /* float: left; */
 
   /* Gutters:
    * Each column is padded by half-a-gutter on each side,
@@ -39,12 +39,13 @@
 }
 
 
+
 /* Non-mobile, grid */
 @media only screen and (min-width: 640px) {
   /* 3 columns, 3/12 in % */
-  .col-2 {
+  /* .col-2 {
     width: 50%;
-  }
+  } */
 
   .col-1 {
     width: 100%;
