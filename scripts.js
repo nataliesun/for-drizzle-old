@@ -210,7 +210,7 @@ function showEverything(moist, rainProbable) {
 
   let resultStr = `
     <h1>${suggestion}</h1>
-    <p>The suggestion is based on the moisure content of your soil (${moistureContent}%) and the rain forecast (it probably ${rain} rain).</p>`
+    <p>The suggestion is based on the moisture content of your soil (${moistureContent}%) and the rain forecast (it probably ${rain} rain).</p>`
   SUGGESTION_EL.append(resultStr);
   //makes the rain chart
   makeWeatherCharts();
