@@ -93,7 +93,7 @@ function getLocationKey(array) {
   //apikey5: 4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD
 
   //function takes in coordinates array and gets a key to use in getRainForecast's API call
-  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&q=${
+  let locationKeyReq = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&q=${
     array[1]
   },${array[0]}`;
 
@@ -106,7 +106,7 @@ function getLocationKey(array) {
 function getRainForecast(key) {
   //uses the key from getLocation key to get the 12 hour rain forecast from Accuweather API
 
-  let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=IwQXmAT1yzTn2WpTPEVm61ktKK5XkNow&details=true`;
+  let forecastReq = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${key}?apikey=4hvDuxAVb8vTbuD66W53PXCAkGWqvtjD&details=true`;
 
     return fetch(forecastReq)
     .then(handleErrors)
@@ -206,9 +206,11 @@ function showEverything(moist, rainProbable) {
   //displays to the DOM the html using the data from API fetches
   let moistureContent = moist*100;
   let rain = rainProbable ? `will` : `won't`;
-  let suggestion = ((moistureContent >= 30) || rainProbable) ? `you don't need to water` : `you should water`;
+  let suggestion = ((moistureContent >= 25) || rainProbable) ? `You don't need to water` : `You should water`;
 
-  let resultStr = `<p>The moisure content of your soil is ${moistureContent}% and it probably ${rain} rain in the next 12 hours so ... ${suggestion}</p>`
+  let resultStr = `
+    <h1>${suggestion}</h1>
+    <p>The suggestion is based on the moisure content of your soil (${moistureContent}%) and the rain forecast (it probably ${rain} rain).</p>`
   SUGGESTION_EL.append(resultStr);
   //makes the rain chart
   makeWeatherCharts();
@@ -217,11 +219,11 @@ function showEverything(moist, rainProbable) {
 function displayResults(ad, ci, st, z) {
   //clears the suggestion div and old map when the user searches again
   SUGGESTION_EL.html('');
-  $('fieldset').css({
+  $('.map').css({
     'background': '',
     'background-repeat': '',
     'background-position': '',
-    'background-size': ''
+    'margin': ''
   });
 
   //makes fetches to each API in order for the data to be used for the next -- ends up with moisture content and rain forecast
@@ -251,11 +253,14 @@ function handleErrors(response) {
 
 function displayMap(array) {
   //uses google's map img api to diplay the user's input location
-  $('fieldset').css({
-    'background': `url("https://maps.googleapis.com/maps/api/staticmap?size=800x800&markers=color:blue%7C${array[1]},${array[0]}&key=AIzaSyB1CRKX58WoY0erbMTwbYTW_U9Quq74QYQ")`,
+  $('.map').css({
+    'background-image': `linear-gradient(
+      rgba(253, 247, 239, 0.6),
+      rgba(253, 247, 239, 0.2)
+    ), url("https://maps.googleapis.com/maps/api/staticmap?size=800x600&scale=2&markers=color:blue%7C${array[1]},${array[0]}&key=AIzaSyB1CRKX58WoY0erbMTwbYTW_U9Quq74QYQ")`,
     'background-repeat': 'no-repeat',
     'background-position': 'center',
-    'background-size': '65%'
+    'margin': '45px 0'
   });
 }
 
@@ -279,14 +284,22 @@ function watchForm() {
       //adding address to local storage
       let search = window.localStorage.getItem('search');
       let searchJ = JSON.parse(search);
-
+        
       if (search === null) {
         let addSearchesArr = [];
         addSearchesArr.push(searchInfo);
         window.localStorage.setItem('search', JSON.stringify(addSearchesArr));
       } else {
-        searchJ.push(searchInfo);
-        window.localStorage.setItem('search', JSON.stringify(searchJ));
+        let newAddress = true;
+        searchJ.forEach(item => {
+          if (item.address === searchInfo.address) {
+            newAddress = false;
+          }
+        });        
+        if (newAddress) {
+          searchJ.push(searchInfo);
+          window.localStorage.setItem('search', JSON.stringify(searchJ));
+        }
       }
 
       //displays loading animation
@@ -295,6 +308,10 @@ function watchForm() {
     displayResults(address, city, state, zip);
     //clears API account data to not hit max
     cleanup();
+    $('#address').val("");
+    $('#city').val("");
+    $('#state').val("");
+    $('#zip').val("");
   });
 }
 

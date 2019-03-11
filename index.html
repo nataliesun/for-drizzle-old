@@ -13,7 +13,7 @@
   <body>
     <header>
       <h1>For Drizzle</h1>
-      <p>Enter an address location info and we'll tell you whether or not you should water your plants!</p>
+      <p>Enter your address and we'll tell you whether or not you should water your plants!</p>
       <a href="#more-info"><button type="button" name="info">More Info</button></a>
     </header>
     <main>
@@ -26,7 +26,8 @@
       </section>
 
       <section id="form-container">
-        <form id="js-form">
+        <div class="map">
+          <form id="js-form">
             <fieldset>
               <legend>Enter Address</legend>
               <input type="text" name="address" id="address" required>
@@ -42,7 +43,8 @@
               </div>
             </fieldset>
           </form>
-        </section>
+        </div>
+      </section>
 
         <section id="result-container">
           <div id="results">
@@ -62,8 +64,8 @@
         <footer id="more-info">
           <div class="row">
             <h2 class="col-2">About This App</h2>
-            <p class="col-2">Soil moisture content is the percentage of water to soil. These readings are taken twice a day. We use Accuweather and Agromonitoring APIs for rain probability and soil moisture content. This app recommends watering if the hourly chance of
-            rain (obtained from Accuweather’s API isn’t above 50% in the next 12 hours.</p>
+            <p class="col-2"> We use Accuweather and Agromonitoring APIs for rain probability and soil moisture content. Soil moisture content is the percentage of water to soil. These readings are taken twice a day. This app recommends watering if the hourly chance of
+            rain isn’t above 50% in the next 12 hours and soil moisture content is 25% or under.</p>
           </div>
         </footer>
     </main>

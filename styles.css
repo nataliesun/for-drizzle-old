@@ -192,7 +192,7 @@ input:hover {
 #suggestion p {
   font-family: 'Montserrat', sans-serif;
   margin: auto;
-  padding: 40px 15px;
+  padding: 20px 15px;
   text-align: center;
   font-size: 20px;
   /* width: 80%; */
@@ -201,6 +201,13 @@ input:hover {
   animation-duration: 4s;
   animation-fill-mode: forwards;
   color: white;
+}
+
+#suggestion h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 45px;
+  text-align: center;
+  font-weight: light;
 }
 
 .loader {
