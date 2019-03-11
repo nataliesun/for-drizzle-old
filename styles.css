@@ -236,6 +236,16 @@ canvas {
   margin-top: 35px;
 }
 
+.api-link {
+  color: inherit;
+  font-family: inherit;
+}
+
+
+.api-link:hover {
+  color: #3498db;
+}
+
 @keyframes animation {
   0% {
     color: white;
@@ -285,6 +295,8 @@ footer h2 {
 .row h2 {
   text-align: center;
 }
+
+
 
 @media only screen and (max-width: 375px) {
 
