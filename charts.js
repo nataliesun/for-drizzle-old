@@ -12,6 +12,8 @@ function getTwelveHours(current) {
     let nextHour = current + i;
     if (nextHour < 12) {
       nextTwelve.push(`${nextHour} am`);
+    } else if (nextHour === 12 ) {
+      nextTwelve.push(`12 pm`);
     } else if (nextHour < 24) {
       nextTwelve.push(`${nextHour - 12} pm`);
     } else if (nextHour === 24) {
