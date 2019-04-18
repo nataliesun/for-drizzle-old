@@ -1,6 +1,6 @@
 # For Drizzle
 
-[Live App](https://natsun121.github.io/for-drizzle/)
+[Live App](https://nataliesun.github.io/for-drizzle/)
 
 ![Alt text](https://github.com/natsun121/for-drizzle/blob/master/assets/screenshot480.png "Screenshot of live app")
 
