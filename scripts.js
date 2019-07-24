@@ -137,7 +137,8 @@ function getMoisture(id) {
 }
 
 function getPolygon(coordinates) {
-  //gets the "id" of the polygon made from user's address so the Agro API can gather soil data
+    //gets the "id" of the polygon made from user's address so the Agro API can gather soil data
+  const proxyurl = "https://cors-anywhere.herokuapp.com/";
   const url =
     "https://api.agromonitoring.com/agro/1.0/polygons?appid=859dbb08fa72a87e13b7ac7d68ef66ed";
   const body = {
@@ -160,7 +161,7 @@ function getPolygon(coordinates) {
     body: JSON.stringify(body)
   };
 
-  return fetch(url, options)
+  return fetch(proxyurl + url, options)
     .then(response => response.json())
     .then(responseJson => responseJson.id);
 }
