@@ -1,78 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Ruluko" rel="stylesheet">
 
-    <link rel="stylesheet" href="normalize.css">
-    <link rel="stylesheet" href="float-grid.css">
-    <link rel="stylesheet" href="styles.css">
-    <title>For Drizzle</title>
-  </head>
-  <body>
-    <header>
-      <h1>For Drizzle</h1>
-      <p>Enter your address and we'll tell you whether or not you should water your plants!</p>
-      <a href="#more-info"><button type="button" name="info">More Info</button></a>
-    </header>
-    <main>
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="https://img.icons8.com/dusk/64/000000/water.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Ruluko" rel="stylesheet">
+  <link rel="stylesheet" href="normalize.css">
+  <link rel="stylesheet" href="float-grid.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>For Drizzle</title>
+</head>
 
-      <section id="searches-container">
-        <button type="button" name="button" id="searches-show">Past Searches</button>
-        <div class="searches" id="past-searches">
-        </div>
+<body>
+  <header>
+    <h1>For Drizzle</h1>
+    <p>Enter your address and we'll tell you whether or not you should water your plants!</p>
+    <a href="#more-info"><button type="button" name="info">More Info</button></a>
+  </header>
+  <main>
 
-      </section>
+    <section id="searches-container">
+      <button type="button" name="button" id="searches-show">Past Searches</button>
+      <div class="searches" id="past-searches">
+      </div>
 
-      <section id="form-container">
-        <div class="map">
-          <form id="js-form">
-            <fieldset>
-              <legend>Enter Address</legend>
-              <input type="text" name="address" id="address" required>
-              <label for="address">Street Address</label>
-              <input type="text" name="city" id="city" required>
-              <label for="city">City</label>
-              <input type="text" name="state" id="state" required>
-              <label for="state">State</label>
-              <input type="text" name="zip" id="zip" required>
-              <label for="zip">Zip</label>
-              <div id="submit-container">
-                <input type="submit" value="Submit" id="submit">
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </section>
+    </section>
 
-        <section id="result-container">
-          <div id="results">
-            <div class="loader" id="loading" hidden></div>
-          </div>
-
-          <div class="row col-1"id='suggestion'>
-          </div>
-
-          <div class="row">
-            <div class="col-2 chart">
-              <canvas id="myChart"></canvas>
+    <section id="form-container">
+      <div class="map">
+        <form id="js-form">
+          <fieldset>
+            <legend>Enter Address</legend>
+            <input type="text" name="address" id="address" required>
+            <label for="address">Street Address</label>
+            <input type="text" name="city" id="city" required>
+            <label for="city">City</label>
+            <input type="text" name="state" id="state" required>
+            <label for="state">State</label>
+            <input type="text" name="zip" id="zip" required>
+            <label for="zip">Zip</label>
+            <div id="submit-container">
+              <input type="submit" value="Submit" id="submit">
             </div>
-          </div>
-        </section>
+          </fieldset>
+        </form>
+      </div>
+    </section>
 
-        <footer id="more-info">
-          <div class="row">
-            <h2 class="col-2">About This App</h2>
-            <p class="col-2"> We use <a class="api-link" href="https://developer.accuweather.com/" target="_blank">Accuweather</a> and <a class="api-link" href="https://agromonitoring.com/" target="_blank">Agromonitoring</a> APIs for rain probability and soil moisture content. Soil moisture content is the percentage of water to soil. These readings are taken twice a day. This app recommends watering if the hourly chance of
-            rain isn’t above 50% in the next 12 hours and soil moisture content is 25% or under.</p>
-          </div>
-        </footer>
-    </main>
+    <section id="result-container">
+      <div id="results">
+        <div class="loader" id="loading" hidden></div>
+      </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-    <script type="text/javascript" src="charts.js"></script>
-    <script type="text/javascript" src="scripts.js"></script>
-  </body>
+      <div class="row col-1" id='suggestion'>
+      </div>
+
+      <div class="row">
+        <div class="col-2 chart">
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <footer id="more-info">
+      <div class="row">
+        <h2 class="col-2">About This App</h2>
+        <p class="col-2"> We use <a class="api-link" href="https://developer.accuweather.com/"
+            target="_blank">Accuweather</a> and <a class="api-link" href="https://agromonitoring.com/"
+            target="_blank">Agromonitoring</a> APIs for rain probability and soil moisture content. Soil moisture
+          content is the percentage of water to soil. These readings are taken twice a day. This app recommends watering
+          if the hourly chance of
+          rain isn’t above 50% in the next 12 hours and soil moisture content is 25% or under.</p>
+      </div>
+    </footer>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+  <script type="text/javascript" src="charts.js"></script>
+  <script type="text/javascript" src="scripts.js"></script>
+</body>
+
 </html>
